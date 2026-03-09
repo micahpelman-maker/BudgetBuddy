@@ -77,10 +77,11 @@ app.post('/addEvent',(req,res)=>{
     let p = req.body
     let e = new gradeEvent(p.cost,p.revenue,p.name,p.date);
     addEvent(e);
+    res.end();
 })
 //allows you to add to the budget
-app.post('/addBudget',(res,req)=>{
-    var n = res.body;
+app.post('/addBudget',(req,res)=>{
+    var n = req.body;
     fs.readFile('information.json',(err, data)=>{
         if(err)
             throw new Error(err);
@@ -89,7 +90,9 @@ app.post('/addBudget',(res,req)=>{
         dat.budget[n.type] += n.amount;
         fs.writeFile('information.json',JSON.stringify(dat),()=>{});
     });
+    res.end();
 })
+//adds the different budgets together
 function addBudgets(){
     let x = getBudgets();
     x._comment = 0;
@@ -104,7 +107,7 @@ function addBudgets(){
     let sum = 0;
     for(let i = 0; i < data.events.length; i++){
         if(data.events[i].name === type){
-            sum += -data.events[i].cost + data.events[i].revenue;
+            sum += - data.events[i].cost + data.events[i].revenue;
         }
     }
     return sum;
